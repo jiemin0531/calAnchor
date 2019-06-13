@@ -74,19 +74,37 @@ def generate_anchors(params):
     #print("***************")
     #print(anchors)
     #print("***************")
-    anchors = np.reshape(anchors, [-1])
+    #anchors = np.reshape(anchors, [-1])
+
 
     return anchors, class_names
 #v2
 
 
 
-params = {'stride': '32', 'tolerate': '0.05', 'annotation_dir': '/home/jiemin/anchorGenerate/voc2007/', 'input_h': '416', 'image_dir': '/home/jiemin/anchorGenerate/voc2007/', 'num_anchors': '5', 'input_w': '416'}
 
+params = {'stride': '32', 'tolerate': '0.05', 'annotation_dir': '/home/jiemin/anchorGenerate/voc2007/', 'input_h': '416', 'image_dir': '/home/jiemin/anchorGenerate/voc2007/', 'num_anchors': '5', 'input_w': '416'}
+num_anchors = int(params["num_anchors"])
 generate_anchors = generate_anchors
 
 anchors, class_names = generate_anchors(params)
-print("Anchors: ")
-print("\t{}".format(anchors))
+
+print("anchor_X")
+for index in range(0,num_anchors):
+    print(anchors[index][0], end='')
+    print(",", end='')
+
+print("")
+
+print("anchor_Y")
+for index in range(0,num_anchors):
+    print(anchors[index][0], end='')
+    print(",", end='')
+
+print("")
+
+
+#print("Anchors: ")
+#print("\t{}".format(anchors))
 print("Class names: ")
 print("\t{}".format(class_names))
