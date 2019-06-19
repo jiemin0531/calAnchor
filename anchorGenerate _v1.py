@@ -4,29 +4,17 @@ from tqdm import tqdm
 import xml.etree.ElementTree as ET
 import sklearn.cluster
 #base
-def parse_annotations(annotation_dir, normalize=False):
-    #annotations = [os.path.join(os.path.abspath(annotation_dir), f) for f in os.listdir(annotation_dir)
-    #               if f.lower().endswith(".xml")]
+def parse_annotations(annotation_dir, image_dir, normalize=False):
+    annotations = [os.path.join(os.path.abspath(annotation_dir), f) for f in os.listdir(annotation_dir)
+                   if f.lower().endswith(".xml")]
 
-
-
-    annotations=[]
-    f = open('/home/jiemin/anchorGenerate/xmlList.txt','r')
-    for line in f:
-        annotations.append(line.strip('\n'))
-   # print(result)
-
-
-
-
-    #print(annotations)
     result = []
     for annotation in tqdm(annotations):
         #print("annotations")
         #print(annotations)
         root = ET.parse(annotation).getroot()
-        img_path = os.path.join(annotation_dir, root.find("filename").text)
-        print(img_path)
+        img_path = os.path.join(image_dir, root.find("filename").text)
+
         size = root.find("size")
         w = int(size.find("width").text)
         h = int(size.find("height").text)
@@ -58,13 +46,14 @@ def run_kmeans(data, num_anchors, tolerate, verbose=False):#tolerate min error,v
 #v2
 def generate_anchors(params):
     num_anchors = int(params["num_anchors"])
+    image_dir = params["image_dir"]
     annotation_dir = params["annotation_dir"]
     tolerate = float(params["tolerate"])
     stride = int(params["stride"])
     input_w = int(params["input_w"])
     input_h = int(params["input_h"])
 
-    annotations = parse_annotations(annotation_dir, normalize=True)
+    annotations = parse_annotations(annotation_dir, image_dir, normalize=True)
     print("{} annotations found.".format(len(annotations)))
     class_names = set()
     data = []
@@ -101,7 +90,7 @@ def generate_anchors(params):
 
 
 
-params = {'stride': '32', 'tolerate': '0.05', 'annotation_dir': '/home/jiemin/anchorGenerate/xmlList/', 'input_h': '416', 'num_anchors': '1', 'input_w': '416'}
+params = {'stride': '32', 'tolerate': '0.05', 'annotation_dir': '/home/jiemin/anchorGenerate/Image/', 'input_h': '416', 'image_dir': '/home/jiemin/anchorGenerate/Image/', 'num_anchors': '1', 'input_w': '416'}
 num_anchors = int(params["num_anchors"])
 generate_anchors = generate_anchors
 
@@ -124,5 +113,5 @@ print("")
 
 #print("Anchors: ")
 #print("\t{}".format(anchors))
-#print("Class names: ")
-#print("\t{}".format(class_names))
+print("Class names: ")
+print("\t{}".format(class_names))
